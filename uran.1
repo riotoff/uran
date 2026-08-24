@@ -1,0 +1,87 @@
+.TH URAN 1 "August 2026" "GNU/Uran 1.0" "User Commands"
+.SH NAME
+uran \- generate random numbers using /dev/urandom
+
+.SH SYNOPSIS
+.B uran
+[\fI\,OPTIONS\/\fR]
+
+.SH DESCRIPTION
+.B uran
+generates random numbers using the system entropy source
+.IR /dev/urandom .
+It supports range limiting, multiple values, and various output formats.
+.PP
+By default, it prints a single 32-bit unsigned integer.
+
+.SH OPTIONS
+.TP
+.BR \-n ", " \-\-count = \fI\,N\/\fR
+Generate N random numbers. Default: 1.
+.TP
+.BR \-m ", " \-\-min = \fI\,N\/\fR
+Set minimum value of the range. Default: 0.
+.TP
+.BR \-M ", " \-\-max = \fI\,N\/\fR
+Set maximum value of the range.
+Default: maximum 32-bit value (4294967295).
+.TP
+.BR \-x ", " \-\-hex
+Output numbers in hexadecimal format.
+.TP
+.BR \-o ", " \-\-octal
+Output numbers in octal format.
+.TP
+.BR \-b ", " \-\-binary
+Output numbers in binary format.
+.TP
+.BR \-s ", " \-\-separator = \fI\,STRING\/\fR
+Use STRING as a separator between numbers.
+Default: newline character.
+.TP
+.BR \-N ", " \-\-nonblock
+Use non-blocking entropy source. If insufficient entropy is available,
+falls back to blocking mode automatically.
+.TP
+.BR \-\-version
+Show version information and exit.
+.TP
+.BR \-\-help
+Show this help message and exit.
+
+.SH EXIT STATUS
+.TP
+.B 0
+Successful completion.
+.TP
+.B 1
+Error (invalid arguments, read failure, etc.).
+
+.SH EXAMPLES
+.TP
+Generate one random number (default):
+.B uran
+.TP
+Generate 5 numbers in range 1-10:
+.B "uran -n 5 -m 1 -M 10"
+.TP
+Generate 3 hexadecimal numbers separated by commas:
+.B "uran -n 3 -x -s \",\""
+.TP
+Generate a 12-character ASCII password (codes 33-126):
+.B "uran -n 12 -m 33 -M 126 -s \"\""
+.TP
+Generate without blocking on low entropy:
+.B "uran -N -n 3"
+
+.SH BUGS
+Range validation prevents overflow by using 64-bit arithmetic internally.
+Uniform distribution is guaranteed through rejection sampling.
+
+.SH AUTHOR
+Written by riotoff <\fI\,your-email@example.com\/\fR>.
+
+.SH SEE ALSO
+.BR random (4),
+.BR getrandom (2),
+.BR od (1)
