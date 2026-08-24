@@ -9,10 +9,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define VERSION "1.0"
-#define MAX_UINT32 0xFFFFFFFF
-
-static const char hex_chars[] = "0123456789abcdef";
+#define VERSION "1.1"
 
 void print_binary(unsigned int n) {
     char buffer[33];
@@ -53,7 +50,7 @@ unsigned int get_random_uint32(bool nonblock) {
 
 unsigned int random_in_range(unsigned int min, unsigned int max, bool nonblock) {
     uint64_t range = (uint64_t)max - (uint64_t)min + 1;
-    uint64_t limit = (uint64_t)MAX_UINT32 + 1;
+    uint64_t limit = (uint64_t)UINT32_MAX + 1;
     
     if (range == 0) {
         fprintf(stderr, "Error: invalid range (overflow detected)\n");
@@ -120,24 +117,28 @@ int parse_count(const char *str) {
 
 void print_help(const char *prog_name) {
     printf("Usage: %s [OPTIONS]\n", prog_name);
-    printf("Generate random numbers using /dev/urandom\n\n");
+    printf("Generate random numbers using getrandom() system call\n\n");
     printf("Options:\n");
     printf("  -n, --count=N     Generate N numbers (default: 1)\n");
     printf("  -m, --min=N       Minimum value (default: 0)\n");
-    printf("  -M, --max=N       Maximum value (default: UINT32_MAX)\n");
-    printf("  -x, --hex         Output in hexadecimal\n");
+    printf("  -M, --max=N       Maximum value (default: %u)\n", UINT32_MAX);
+    printf("  -x, --hex         Output in hexadecimal (8 digits with leading zeros)\n");
     printf("  -o, --octal       Output in octal\n");
-    printf("  -b, --binary      Output in binary\n");
+    printf("  -b, --binary      Output in binary (32 bits)\n");
     printf("  -s, --separator   Separator between numbers (default: newline)\n");
     printf("  -N, --nonblock    Use non-blocking entropy (fallback to blocking)\n");
     printf("  --help            Show this help\n");
     printf("  --version         Show version information\n");
+    printf("\nExamples:\n");
+    printf("  %s -n 5 -m 1 -M 100          # 5 random numbers between 1-100\n", prog_name);
+    printf("  %s -x -n 3                    # 3 random hex numbers\n", prog_name);
+    printf("  %s -b -s \", \" -n 4           # 4 binary numbers separated by comma\n", prog_name);
 }
 
 int main(int argc, char **argv) {
     int count = 1;
     unsigned int min_val = 0;
-    unsigned int max_val = MAX_UINT32;
+    unsigned int max_val = UINT32_MAX;
     int hex_output = 0;
     int octal_output = 0;
     int binary_output = 0;
@@ -180,7 +181,7 @@ int main(int argc, char **argv) {
                 binary_output = 1;
                 break;
             case 's':
-                separator = optarg ? optarg : "\n";
+                separator = optarg;
                 break;
             case 'N':
                 nonblock = true;
@@ -212,7 +213,7 @@ int main(int argc, char **argv) {
         unsigned int num = random_in_range(min_val, max_val, nonblock);
 
         if (hex_output) {
-            printf("%x", num);
+            printf("%08x", num);
         } else if (octal_output) {
             printf("%o", num);
         } else if (binary_output) {
