@@ -1,6 +1,6 @@
 GNU/Uran
 ===
-you can use this util to integrate it into your project for real random.
+this utility have to be a useful one and does random numbers via /dev/urandom file.
 
 
 source at src/
