@@ -4,7 +4,7 @@ you can use this util to integrate it into your project for real random.
 
 
 source at src/
-build the util via Makefile
+build the util via Makefile: sudo make install
 man documentation available after building the project: man uran
 
 * Donate: UQByuO9tYtjbuQVpERMfgr0fXKKlSf6S-7BLGIo24ijrFtO8 GRAM (prev. TON) USDT
