@@ -180,8 +180,7 @@ int main(int argc, char **argv) {
                 return 0;
             case 'v':
                 printf("uran %s\n", VERSION);
-                printf("License: MIT\n");
-                printf("Uses: %s\n", URANDOM_PATH);
+                printf("License: GPL-3.0\n");
                 return 0;
             default:
                 fprintf(stderr, "Try '%s --help' for more information.\n", argv[0]);
