@@ -3,7 +3,7 @@ GNU/Uran
 this utility have to be a useful one and does random numbers via /dev/urandom file.
 
 
-source at src/
+source at main.c
 build the util via Makefile: sudo make install
 man documentation available after building the project: man uran
 
